@@ -28,13 +28,13 @@
         }
         .coin {
             margin: 40px auto;
-            width: 350px; /* Increased size */
+            width: 350px;
             height: auto;
             cursor: pointer;
             transition: transform 0.1s;
         }
         .coin:active {
-            transform: scale(0.95); /* Coin shrinks when clicked */
+            transform: scale(0.95);
         }
         .progress-bar {
             background-color: #444;
@@ -69,7 +69,7 @@
         <div class="progress" id="progress">500/500</div>
     </div>
     <div class="menu">
-        <div>Ref</div>
+        <div onclick="openBoostPage()">Boost</div>
         <div>Task</div>
         <div>Top</div>
         <div>Boost</div>
@@ -83,30 +83,48 @@
 
         let balance = parseInt(localStorage.getItem('balance')) || 0;
         let progress = parseInt(localStorage.getItem('progress')) || 500;
+        let tapLevel = parseInt(localStorage.getItem('tapLevel')) || 1;
+        let upgradeCost = 200 * Math.pow(2, tapLevel - 1); // প্রথম আপগ্রেডের খরচ
+
         balanceDisplay.textContent = balance;
-        progressDisplay.textContent = `${progress}/500`;
 
         function updateLocalStorage() {
             localStorage.setItem('balance', balance);
             localStorage.setItem('progress', progress);
+            localStorage.setItem('tapLevel', tapLevel);
         }
 
         coin.addEventListener('click', () => {
             if (progress > 0) {
-                // Coin animation
-                coin.style.transform = 'scale(0.95)'; // Shrink on click
+                coin.style.transform = 'scale(0.95)';
                 setTimeout(() => {
-                    coin.style.transform = 'scale(1)'; // Return to original size
+                    coin.style.transform = 'scale(1)';
                 }, 100);
 
-                // Update balance and progress
-                balance += 1;
+                // প্রতি ক্লিকে Coin যুক্ত হবে
+                balance += tapLevel; // আপগ্রেড করা Tap Level অনুযায়ী Coin যুক্ত হবে
                 progress -= 1;
                 balanceDisplay.textContent = balance;
                 progressDisplay.textContent = `${progress}/500`;
                 updateLocalStorage();
             }
         });
+
+        function upgradeTapLevel() {
+            if (balance >= upgradeCost) {
+                balance -= upgradeCost; // ব্যালেন্স থেকে আপগ্রেড খরচ কাটা হবে
+                tapLevel += 1; // Tap Level বাড়বে
+                upgradeCost *= 2; // পরবর্তী আপগ্রেডের জন্য খরচ দ্বিগুণ হবে
+                updateLocalStorage();
+                alert(`Tap Level upgraded to ${tapLevel}! Next upgrade cost: ${upgradeCost} coins.`);
+            } else {
+                alert('Not enough coins to upgrade!');
+            }
+        }
+
+        function openBoostPage() {
+            window.open('boost.html', '_blank');
+        }
 
         function regenerateProgress() {
             if (progress < 500) {
