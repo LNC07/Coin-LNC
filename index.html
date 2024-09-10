@@ -3,61 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Game Interface</title>
+    <title>Boost Page</title>
     <style>
         body {
-            background-color: #222;
+            background-color: #444;
             color: #fff;
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
+            padding: 20px;
         }
-        .menu {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-            width: 80%;
-        }
-        .menu div {
-            background-color: #333;
-            padding: 10px;
+        .button {
+            background-color: #555;
+            color: #fff;
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 20px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #777;
+        }
+        .currency {
+            font-size: 24px;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
     <div class="currency">💰 <span id="balance">0</span></div>
-    <img src="coin.png" alt="Coin" class="coin" id="coin">
-    <div class="menu">
-        <div id="ref-button">Ref</div>
-        <div id="task-button">Task</div>
-        <div id="tap-button">Tap</div>
-        <div id="boost-button">Boost</div>
-        <div id="stats-button">Stats</div>
-    </div>
-
+    <div class="currency">Energy Limit: <span id="energyLimit">500</span></div>
+    
+    <button class="button" id="tap-button">TAP (Level: <span id="tapLevel">1</span>)</button>
+    <button class="button" id="upgrade-tap-button">Upgrade TAP (200 Coins)</button>
+    <button class="button" id="upgrade-energy-button">Upgrade Energy Limit (500 Coins)</button>
+    <button class="button" id="buy-bot-button">Buy Bot (10,000 Coins)</button>
+    <div id="botStatus">Bot: Not Purchased</div>
+    
     <script>
-        // JavaScript code for main page
         const balanceDisplay = document.getElementById('balance');
+        const energyLimitDisplay = document.getElementById('energyLimit');
+        const tapLevelDisplay = document.getElementById('tapLevel');
+        const botStatusDisplay = document.getElementById('botStatus');
+
         let balance = parseInt(localStorage.getItem('balance')) || 0;
+        let tapLevel = parseInt(localStorage.getItem('tapLevel')) || 1;
+        let energyLimit = parseInt(localStorage.getItem('energyLimit')) || 500;
+        let botPurchased = localStorage.getItem('botPurchased') === 'true';
+
         balanceDisplay.textContent = balance;
+        tapLevelDisplay.textContent = tapLevel;
+        energyLimitDisplay.textContent = energyLimit;
+        botStatusDisplay.textContent = botPurchased ? 'Bot: Purchased' : 'Bot: Not Purchased';
 
-        document.getElementById('boost-button').addEventListener('click', () => {
-            window.location.href = 'boost.html'; // Redirect to Boost page
-        });
-        
         document.getElementById('tap-button').addEventListener('click', () => {
-            window.location.href = 'index.html'; // Redirect to Main page
+            if (energyLimit > 0) {
+                balance += tapLevel; // Add coins based on tap level
+                energyLimit--;
+                localStorage.setItem('balance', balance);
+                localStorage.setItem('energyLimit', energyLimit);
+                updateDisplays();
+            }
         });
 
-        // Other button functionalities...
+        document.getElementById('upgrade-tap-button').addEventListener('click', () => {
+            const upgradeCost = 200 * Math.pow(2, tapLevel - 1);
+            if (balance >= upgradeCost) {
+                balance -= upgradeCost;
+                tapLevel++;
+                localStorage.setItem('balance', balance);
+                localStorage.setItem('tapLevel', tapLevel);
+                updateDisplays();
+            }
+        });
+
+        document.getElementById('upgrade-energy-button').addEventListener('click', () => {
+            const upgradeCost = 500 * Math.pow(2, parseInt(energyLimitDisplay.textContent / 500) - 1);
+            if (balance >= upgradeCost) {
+                balance -= upgradeCost;
+                energyLimit += 500;
+                localStorage.setItem('balance', balance);
+                localStorage.setItem('energyLimit', energyLimit);
+                updateDisplays();
+            }
+        });
+
+        document.getElementById('buy-bot-button').addEventListener('click', () => {
+            if (balance >= 10000 && !botPurchased) {
+                balance -= 10000;
+                botPurchased = true;
+                localStorage.setItem('balance', balance);
+                localStorage.setItem('botPurchased', botPurchased);
+                updateDisplays();
+            }
+        });
+
+        function updateDisplays() {
+            balanceDisplay.textContent = balance;
+            tapLevelDisplay.textContent = tapLevel;
+            energyLimitDisplay.textContent = energyLimit;
+            botStatusDisplay.textContent = botPurchased ? 'Bot: Purchased' : 'Bot: Not Purchased';
+        }
     </script>
 </body>
 </html>
