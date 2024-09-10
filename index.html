@@ -34,7 +34,7 @@
             transition: transform 0.1s;
         }
         .coin:active {
-            transform: scale(0.95);
+            transform: scale(0.95); /* Coin shrinks when clicked */
         }
         .progress-bar {
             background-color: #444;
@@ -94,9 +94,9 @@
         coin.addEventListener('click', () => {
             if (progress > 0) {
                 // Coin animation
-                coin.style.transform = 'scale(0.95)';
+                coin.style.transform = 'scale(0.95)'; // Shrink on click
                 setTimeout(() => {
-                    coin.style.transform = 'scale(1)';
+                    coin.style.transform = 'scale(1)'; // Return to original size
                 }, 100);
 
                 // Update balance and progress
