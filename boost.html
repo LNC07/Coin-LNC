@@ -34,27 +34,30 @@
 </head>
 <body>
     <h1>Boost Page</h1>
+    <div class="currency">💰 <span id="balance">0</span></div>
     <div class="menu">
-        <div>Ref</div>
-        <div>Task</div>
-        <div id="return-button">Return</div> <!-- Changed from Tap to Return -->
+        <div id="ref-button">Ref</div>
+        <div id="task-button">Task</div>
+        <div id="tap-button">Tap</div>
         <div id="boost-button">Boost</div>
-        <div>Stats</div>
+        <div id="stats-button">Stats</div>
     </div>
 
     <script>
-        const returnButton = document.getElementById('return-button'); // Get Return button
-        const boostButton = document.getElementById('boost-button'); // Get Boost button
+        // JavaScript code for Boost page
+        const balanceDisplay = document.getElementById('balance');
+        let balance = parseInt(localStorage.getItem('balance')) || 0;
+        balanceDisplay.textContent = balance;
 
-        // Add click event for Boost button (if needed)
-        boostButton.addEventListener('click', () => {
-            // Your boost functionality here
+        document.getElementById('boost-button').addEventListener('click', () => {
+            // Boost functionality can be added here
         });
 
-        // Add click event for Return button
-        returnButton.addEventListener('click', () => {
-            window.location.href = 'index.html'; // Redirect to main page (index.html)
+        document.getElementById('tap-button').addEventListener('click', () => {
+            window.location.href = 'index.html'; // Redirect to Main page
         });
+
+        // Other button functionalities...
     </script>
 </body>
 </html>
