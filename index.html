@@ -16,6 +16,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
         .currency {
             font-size: 24px;
@@ -27,9 +28,13 @@
         }
         .coin {
             margin: 40px auto;
-            width: 300px; /* Increased size */
+            width: 350px; /* Increased size */
             height: auto;
             cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .coin:active {
+            transform: scale(0.95);
         }
         .progress-bar {
             background-color: #444;
@@ -55,6 +60,16 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        .click-effect {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s, transform 0.5s;
+        }
     </style>
 </head>
 <body>
@@ -71,10 +86,13 @@
         <div>Stats</div>
     </div>
 
+    <div class="click-effect" id="clickEffect"></div>
+
     <script>
         const balanceDisplay = document.getElementById('balance');
         const coin = document.getElementById('coin');
         const progressDisplay = document.getElementById('progress');
+        const clickEffect = document.getElementById('clickEffect');
 
         let balance = parseInt(localStorage.getItem('balance')) || 0;
         let progress = parseInt(localStorage.getItem('progress')) || 500;
@@ -86,8 +104,24 @@
             localStorage.setItem('progress', progress);
         }
 
-        coin.addEventListener('click', () => {
+        coin.addEventListener('click', (event) => {
             if (progress > 0) {
+                // Coin animation
+                const rect = coin.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+
+                clickEffect.style.left = `${x}px`;
+                clickEffect.style.top = `${y}px`;
+                clickEffect.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                clickEffect.style.opacity = '0.8';
+
+                setTimeout(() => {
+                    clickEffect.style.opacity = '0';
+                    clickEffect.style.transform = 'translate(-50%, -50%) scale(1)';
+                }, 500);
+
+                // Update balance and progress
                 balance += 1;
                 progress -= 1;
                 balanceDisplay.textContent = balance;
