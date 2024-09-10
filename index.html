@@ -71,7 +71,7 @@
     <div class="menu">
         <div>Ref</div>
         <div>Task</div>
-        <div>Top</div>
+        <div id="top-button">Top</div> <!-- Added id for Top button -->
         <div id="boost-button">Boost</div> <!-- Added id for Boost button -->
         <div>Stats</div>
     </div>
@@ -81,6 +81,7 @@
         const coin = document.getElementById('coin');
         const progressDisplay = document.getElementById('progress');
         const boostButton = document.getElementById('boost-button'); // Get Boost button
+        const topButton = document.getElementById('top-button'); // Get Top button
 
         let balance = parseInt(localStorage.getItem('balance')) || 0;
         let progress = parseInt(localStorage.getItem('progress')) || 500;
@@ -123,6 +124,12 @@
             window.location.href = 'boost.html'; // Redirect to boost.html
         });
 
+        // Add click event for Top button
+        topButton.addEventListener('click', () => {
+            window.location.href = 'index.html'; // Redirect to main page (index.html)
+        });
+
         setInterval(regenerateProgress, 1000);
     </script>
 </body>
+</html>
