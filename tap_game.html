@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game UI</title>
+    <style>
+        body {
+            background-color: #2C2F33;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .currency {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .boosters, .daily-boosters {
+            background-color: #23272A;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-top: 0;
+        }
+        .booster-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #99AAB5;
+        }
+        .nav-bar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #23272A;
+            padding: 10px;
+            border-radius: 8px;
+            position: fixed;
+            bottom: 0;
+            width: calc(100% - 40px);
+        }
+        .nav-item {
+            text-align: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="currency">
+        <h1>Your Balance: <span id="balance">100,000,007</span></h1>
+    </div>
+
+    <div class="daily-boosters">
+        <h2>Your Daily Boosters</h2>
+        <div class="booster-item">
+            <span>Tap Master</span>
+            <span id="tapMasterLimit">3/3</span>
+        </div>
+        <div class="booster-item">
+            <span>Full Tank</span>
+            <span id="fullTankLimit">3/3</span>
+        </div>
+    </div>
+
+    <div class="boosters">
+        <h2>Boosters</h2>
+        <div class="booster-item">
+            <span>Multitap</span>
+            <span id="multitapCost">200 Coins</span>
+            <button id="upgradeMultitap">Upgrade</button>
+        </div>
+        <div class="booster-item">
+            <span>Energy Limit</span>
+            <span id="energyLimitCost">500 Coins</span>
+            <button id="upgradeEnergyLimit">Upgrade</button>
+        </div>
+        <div class="booster-item">
+            <span>Bot</span>
+            <span>10,000 Coins</span>
+            <button id="buyBot">Buy</button>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-item" id="refButton">Ref</div>
+        <div class="nav-item" id="taskButton">Tasks</div>
+        <div class="nav-item" id="tapButton">Taps</div>
+        <div class="nav-item" id="boostButton">Boost</div>
+        <div class="nav-item" id="statsButton">Stats</div>
+    </div>
+
+    <script>
+        const balanceDisplay = document.getElementById('balance');
+        const tapMasterLimitDisplay = document.getElementById('tapMasterLimit');
+        const fullTankLimitDisplay = document.getElementById('fullTankLimit');
+        const multitapCostDisplay = document.getElementById('multitapCost');
+        const energyLimitCostDisplay = document.getElementById('energyLimitCost');
+
+        let balance = parseInt(localStorage.getItem('balance')) || 100000007;
+        let tapMasterLimit = parseInt(localStorage.getItem('tapMasterLimit')) || 3;
+        let fullTankLimit = parseInt(localStorage.getItem('fullTankLimit')) || 3;
+        let multitapLevel = parseInt(localStorage.getItem('multitapLevel')) || 1;
+        let energyLimitLevel = parseInt(localStorage.getItem('energyLimitLevel')) || 1;
+        let botPurchased = localStorage.getItem('botPurchased') === 'true';
+
+        balanceDisplay.textContent = balance;
+
+        function updateLocalStorage() {
+            localStorage.setItem('balance', balance);
+            localStorage.setItem('tapMasterLimit', tapMasterLimit);
+            localStorage.setItem('fullTankLimit', fullTankLimit);
+            localStorage.setItem('multitapLevel', multitapLevel);
+            localStorage.setItem('energyLimitLevel', energyLimitLevel);
+            localStorage.setItem('botPurchased', botPurchased);
+        }
+
+        document.getElementById('tapButton').addEventListener('click', () => {
+            if (tapMasterLimit > 0) {
+                balance += 1; // 1 coin per tap
+                balanceDisplay.textContent = balance;
+                tapMasterLimit--;
+                tapMasterLimitDisplay.textContent = `${3 - tapMasterLimit}/3`;
+                updateLocalStorage();
+            }
+        });
+
+        document.getElementById('boostButton').addEventListener('click', () => {
+            if (fullTankLimit > 0) {
+                balance += 1; // 1 coin for full tank
+                fullTankLimit--;
+                fullTankLimitDisplay.textContent = `${3 - fullTankLimit}/3`;
+                updateLocalStorage();
+            }
+        });
+
+        document.getElementById('upgradeMultitap').addEventListener('click', () => {
+            const upgradeCost = 200 * Math.pow(2, multitapLevel - 1);
+            if (balance >= upgradeCost) {
+                balance -= upgradeCost;
+                multitapLevel++;
+                updateLocalStorage();
+                multitapCostDisplay.textContent = `${200 * Math.pow(2, multitapLevel - 1)} Coins`;
+            } else {
+                alert('Not enough coins to upgrade Multitap.');
+            }
+        });
+
+        document.getElementById('upgradeEnergyLimit').addEventListener('click', () => {
+            const upgradeCost = 500 * Math.pow(2, energyLimitLevel - 1);
+            if (balance >= upgradeCost) {
+                balance -= upgradeCost;
+                energyLimitLevel++;
+                updateLocalStorage();
+                energyLimitCostDisplay.textContent = `${500 * Math.pow(2, energyLimitLevel - 1)} Coins`;
+            } else {
+                alert('Not enough coins to upgrade Energy Limit.');
+            }
+        });
+
+        document.getElementById('buyBot').addEventListener('click', () => {
+            if (balance >= 10000 && !botPurchased) {
+                balance -= 10000;
+                botPurchased = true;
+                updateLocalStorage();
+                alert('Bot purchased! You will receive 1000 coins every 5 hours.');
+            } else {
+                alert('Not enough coins to buy Bot or Bot already purchased.');
+            }
+        });
+
+        // Function to claim bot coins
+        function claimBotCoins() {
+            if (botPurchased) {
+                balance += 1000; // Add 1000 coins from bot
+                balanceDisplay.textContent = balance;
+                updateLocalStorage();
+                alert('Claimed 1000 coins from Bot!');
+            }
+        }
+
+        // Check for bot coins claim every time the page loads
+        if (botPurchased) {
+            claimBotCoins();
+        }
+
+    </script>
+</body>
+</html>
