@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,7 +72,7 @@
     <div class="menu">
         <div>Ref</div>
         <div>Task</div>
-        <div id="top-button">Top</div> <!-- Added id for Top button -->
+        <div id="tap-button">Tap</div> <!-- Added id for Tap button -->
         <div id="boost-button">Boost</div> <!-- Added id for Boost button -->
         <div>Stats</div>
     </div>
@@ -81,7 +82,7 @@
         const coin = document.getElementById('coin');
         const progressDisplay = document.getElementById('progress');
         const boostButton = document.getElementById('boost-button'); // Get Boost button
-        const topButton = document.getElementById('top-button'); // Get Top button
+        const tapButton = document.getElementById('tap-button'); // Get Tap button
 
         let balance = parseInt(localStorage.getItem('balance')) || 0;
         let progress = parseInt(localStorage.getItem('progress')) || 500;
@@ -124,8 +125,8 @@
             window.location.href = 'boost.html'; // Redirect to boost.html
         });
 
-        // Add click event for Top button
-        topButton.addEventListener('click', () => {
+        // Add click event for Tap button
+        tapButton.addEventListener('click', () => {
             window.location.href = 'index.html'; // Redirect to main page (index.html)
         });
 
