@@ -3,102 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game UI</title>
+    <title>Boost Page</title>
     <style>
         body {
-            background-color: #2C2F33;
-            color: #FFFFFF;
+            background-color: #222;
+            color: #fff;
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-        }
-        .currency {
             text-align: center;
-            margin-bottom: 20px;
-        }
-        .boosters, .daily-boosters {
-            background-color: #23272A;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        h2 {
-            margin-top: 0;
-        }
-        .booster-item {
+            margin: 0;
+            height: 100vh;
             display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #99AAB5;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
-        .nav-bar {
+        .menu {
             display: flex;
             justify-content: space-around;
-            background-color: #23272A;
-            padding: 10px;
-            border-radius: 8px;
-            position: fixed;
-            bottom: 0;
-            width: calc(100% - 40px);
+            margin-top: 20px;
+            width: 80%;
         }
-        .nav-item {
-            text-align: center;
-            cursor: pointer; /* Cursor changes to pointer on hover */
+        .menu div {
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-
-    <div class="currency">
-        <h1>Your Balance: 100,000,007</h1>
-    </div>
-
-    <div class="daily-boosters">
-        <h2>Your Daily Boosters</h2>
-        <div class="booster-item">
-            <span>Tapping Guru</span>
-            <span>3/3</span>
-        </div>
-        <div class="booster-item">
-            <span>Full Tank</span>
-            <span>3/3</span>
-        </div>
-    </div>
-
-    <div class="boosters">
-        <h2>Boosters</h2>
-        <div class="booster-item">
-            <span>Multitap</span>
-            <span>200 Coins</span>
-        </div>
-        <div class="booster-item">
-            <span>Energy Limit</span>
-            <span>200 Coins</span>
-        </div>
-        <div class="booster-item">
-            <span>Recharging Speed</span>
-            <span>2000 Coins</span>
-        </div>
-    </div>
-
-    <div class="nav-bar">
-        <div class="nav-item">Ref</div>
-        <div class="nav-item">Tasks</div>
-        <div class="nav-item">Taps</div>
-        <div class="nav-item" id="boost-button">Boost</div>
-        <div class="nav-item">Stats</div>
+    <h1>Boost Page</h1>
+    <div class="menu">
+        <div>Ref</div>
+        <div>Task</div>
+        <div id="return-button">Return</div> <!-- Changed from Tap to Return -->
+        <div id="boost-button">Boost</div>
+        <div>Stats</div>
     </div>
 
     <script>
-        document.getElementById('boost-button').addEventListener('click', function() {
-            window.location.href = 'boost.html'; // Boost button click will redirect to boost.html
+        const returnButton = document.getElementById('return-button'); // Get Return button
+        const boostButton = document.getElementById('boost-button'); // Get Boost button
+
+        // Add click event for Boost button (if needed)
+        boostButton.addEventListener('click', () => {
+            // Your boost functionality here
         });
 
-        // Uncomment the line below if you want to automatically redirect when the page loads
-        // window.onload = function() {
-        //     window.location.href = 'boost.html'; // This will redirect to boost.html as soon as the page loads
-        // };
+        // Add click event for Return button
+        returnButton.addEventListener('click', () => {
+            window.location.href = 'index.html'; // Redirect to main page (index.html)
+        });
     </script>
-
 </body>
 </html>
