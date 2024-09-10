@@ -72,7 +72,7 @@
         <div>Ref</div>
         <div>Task</div>
         <div>Top</div>
-        <div>Boost</div>
+        <div id="boost-button">Boost</div> <!-- Added id for Boost button -->
         <div>Stats</div>
     </div>
 
@@ -80,6 +80,7 @@
         const balanceDisplay = document.getElementById('balance');
         const coin = document.getElementById('coin');
         const progressDisplay = document.getElementById('progress');
+        const boostButton = document.getElementById('boost-button'); // Get Boost button
 
         let balance = parseInt(localStorage.getItem('balance')) || 0;
         let progress = parseInt(localStorage.getItem('progress')) || 500;
@@ -110,14 +111,18 @@
 
         function regenerateProgress() {
             if (progress < 500) {
-                progress += 3;
+                progress += 3; // Increase progress
                 if (progress > 500) progress = 500;
                 progressDisplay.textContent = `${progress}/500`;
                 updateLocalStorage();
             }
         }
 
+        // Add click event for Boost button
+        boostButton.addEventListener('click', () => {
+            window.location.href = 'boost.html'; // Redirect to boost.html
+        });
+
         setInterval(regenerateProgress, 1000);
     </script>
 </body>
-</html>
