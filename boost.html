@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boost Page</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .button {
+            background-color: #333;
+            color: #fff;
+            padding: 15px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Boost Page</h1>
+    <button class="button" onclick="upgradeTapLevel()">Upgrade Tap Level</button>
+    <button class="button">Energy Level</button>
+    <button class="button">Bot Name</button>
+
+    <script>
+        function upgradeTapLevel() {
+            const balance = parseInt(localStorage.getItem('balance')) || 0;
+            let tapLevel = parseInt(localStorage.getItem('tapLevel')) || 1;
+            let upgradeCost = 200 * Math.pow(2, tapLevel - 1); // আপগ্রেড খরচ দ্বিগুণ হবে
+
+            if (balance >= upgradeCost) {
+                balance -= upgradeCost; // ব্যালেন্স থেকে আপগ্রেড খরচ কাটা হবে
+                tapLevel += 1; // Tap Level বাড়বে
+                localStorage.setItem('balance', balance);
+                localStorage.setItem('tapLevel', tapLevel);
+                alert(`Tap Level upgraded to ${tapLevel}! Next upgrade cost: ${upgradeCost * 2} coins.`);
+            } else {
+                alert('Not enough coins to upgrade!');
+            }
+        }
+    </script>
+</body>
+</html>
