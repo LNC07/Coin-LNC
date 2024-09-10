@@ -60,16 +60,6 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .click-effect {
-            position: absolute;
-            background-color: white;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s, transform 0.5s;
-        }
     </style>
 </head>
 <body>
@@ -86,13 +76,10 @@
         <div>Stats</div>
     </div>
 
-    <div class="click-effect" id="clickEffect"></div>
-
     <script>
         const balanceDisplay = document.getElementById('balance');
         const coin = document.getElementById('coin');
         const progressDisplay = document.getElementById('progress');
-        const clickEffect = document.getElementById('clickEffect');
 
         let balance = parseInt(localStorage.getItem('balance')) || 0;
         let progress = parseInt(localStorage.getItem('progress')) || 500;
@@ -104,22 +91,13 @@
             localStorage.setItem('progress', progress);
         }
 
-        coin.addEventListener('click', (event) => {
+        coin.addEventListener('click', () => {
             if (progress > 0) {
                 // Coin animation
-                const rect = coin.getBoundingClientRect();
-                const x = event.clientX - rect.left;
-                const y = event.clientY - rect.top;
-
-                clickEffect.style.left = `${x}px`;
-                clickEffect.style.top = `${y}px`;
-                clickEffect.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                clickEffect.style.opacity = '0.8';
-
+                coin.style.transform = 'scale(0.95)';
                 setTimeout(() => {
-                    clickEffect.style.opacity = '0';
-                    clickEffect.style.transform = 'translate(-50%, -50%) scale(1)';
-                }, 500);
+                    coin.style.transform = 'scale(1)';
+                }, 100);
 
                 // Update balance and progress
                 balance += 1;
