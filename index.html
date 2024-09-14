@@ -85,18 +85,21 @@
         let balance = parseInt(localStorage.getItem('balance')) || 0;
         let progress = parseInt(localStorage.getItem('progress')) || 500;
         let botPurchased = localStorage.getItem('botPurchased') === 'true';
+        let lastClaimTime = parseInt(localStorage.getItem('lastClaimTime')) || 0;
+        const claimInterval = 18000000; // 5 hours in milliseconds
+
         balanceDisplay.textContent = balance;
         progressDisplay.textContent = `${progress}/500`;
 
         if (botPurchased) {
             botButton.textContent = 'Claim';
-            setInterval(claimCoins, 18000000); // 5 hours in milliseconds
         }
 
         function updateLocalStorage() {
             localStorage.setItem('balance', balance);
             localStorage.setItem('progress', progress);
             localStorage.setItem('botPurchased', botPurchased);
+            localStorage.setItem('lastClaimTime', lastClaimTime);
         }
 
         coin.addEventListener('click', () => {
@@ -122,23 +125,21 @@
                 botButton.textContent = 'Claim';
                 updateLocalStorage();
             } else if (botPurchased) {
-                alert("Claiming 1000 coins...");
-                balance += 1000; // Add 1000 coins to balance
-                balanceDisplay.textContent = balance;
-                updateLocalStorage();
+                const currentTime = Date.now();
+                if (currentTime - lastClaimTime >= claimInterval) {
+                    lastClaimTime = currentTime;
+                    balance += 1000; // Add 1000 coins to balance
+                    balanceDisplay.textContent = balance;
+                    updateLocalStorage();
+                    alert("Claim successful! 1000 coins added to your balance.");
+                } else {
+                    const timeRemaining = claimInterval - (currentTime - lastClaimTime);
+                    alert(`You can claim again in ${Math.ceil(timeRemaining / 60000)} minutes.`);
+                }
             } else {
                 alert("You need 5000 coins to buy a bot!");
             }
         });
-
-        function claimCoins() {
-            if (botPurchased) {
-                alert("You can claim 1000 coins now!");
-                balance += 1000; // Automatically add 1000 coins every 5 hours
-                balanceDisplay.textContent = balance;
-                updateLocalStorage();
-            }
-        }
 
         function regenerateProgress() {
             if (progress < 500) {
