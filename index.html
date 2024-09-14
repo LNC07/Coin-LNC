@@ -115,14 +115,17 @@
         });
 
         botButton.addEventListener('click', () => {
-            if (!botPurchased && balance >= 1000) {
-                balance -= 1000;
+            if (!botPurchased && balance >= 5000) {
+                balance -= 5000;
                 botPurchased = true;
                 balanceDisplay.textContent = balance;
                 botButton.textContent = 'Claim';
                 updateLocalStorage();
             } else if (botPurchased) {
-                alert("You can claim 1000 coins now!");
+                alert("Claiming 1000 coins...");
+                balance += 1000; // Add 1000 coins to balance
+                balanceDisplay.textContent = balance;
+                updateLocalStorage();
             } else {
                 alert("You need 5000 coins to buy a bot!");
             }
@@ -130,7 +133,8 @@
 
         function claimCoins() {
             if (botPurchased) {
-                balance += 1000;
+                alert("You can claim 1000 coins now!");
+                balance += 1000; // Automatically add 1000 coins every 5 hours
                 balanceDisplay.textContent = balance;
                 updateLocalStorage();
             }
