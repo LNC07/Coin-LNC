@@ -28,7 +28,7 @@
         }
         .coin {
             margin: 40px auto;
-            width: 350px; /* Increased size */
+            width: 200px; /* Decreased size */
             height: auto;
             cursor: pointer;
             transition: transform 0.1s;
@@ -72,7 +72,7 @@
         <div>Ref</div>
         <div>Task</div>
         <div>Top</div>
-        <div>BOT</div>
+        <div id="botButton">BOT</div>
         <div>Airdrop</div>
     </div>
 
@@ -80,26 +80,32 @@
         const balanceDisplay = document.getElementById('balance');
         const coin = document.getElementById('coin');
         const progressDisplay = document.getElementById('progress');
+        const botButton = document.getElementById('botButton');
 
         let balance = parseInt(localStorage.getItem('balance')) || 0;
         let progress = parseInt(localStorage.getItem('progress')) || 500;
+        let botPurchased = localStorage.getItem('botPurchased') === 'true';
         balanceDisplay.textContent = balance;
         progressDisplay.textContent = `${progress}/500`;
+
+        if (botPurchased) {
+            botButton.textContent = 'Claim';
+            setInterval(claimCoins, 18000000); // 5 hours in milliseconds
+        }
 
         function updateLocalStorage() {
             localStorage.setItem('balance', balance);
             localStorage.setItem('progress', progress);
+            localStorage.setItem('botPurchased', botPurchased);
         }
 
         coin.addEventListener('click', () => {
             if (progress > 0) {
-                // Coin animation
-                coin.style.transform = 'scale(0.95)'; // Shrink on click
+                coin.style.transform = 'scale(0.95)';
                 setTimeout(() => {
-                    coin.style.transform = 'scale(1)'; // Return to original size
+                    coin.style.transform = 'scale(1)';
                 }, 100);
 
-                // Update balance and progress
                 balance += 1;
                 progress -= 1;
                 balanceDisplay.textContent = balance;
@@ -107,6 +113,28 @@
                 updateLocalStorage();
             }
         });
+
+        botButton.addEventListener('click', () => {
+            if (!botPurchased && balance >= 5000) {
+                balance -= 5000;
+                botPurchased = true;
+                balanceDisplay.textContent = balance;
+                botButton.textContent = 'Claim';
+                updateLocalStorage();
+            } else if (botPurchased) {
+                alert("You can claim 1000 coins now!");
+            } else {
+                alert("You need 5000 coins to buy a bot!");
+            }
+        });
+
+        function claimCoins() {
+            if (botPurchased) {
+                balance += 1000;
+                balanceDisplay.textContent = balance;
+                updateLocalStorage();
+            }
+        }
 
         function regenerateProgress() {
             if (progress < 500) {
