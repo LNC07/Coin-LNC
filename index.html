@@ -115,8 +115,8 @@
         });
 
         botButton.addEventListener('click', () => {
-            if (!botPurchased && balance >= 5000) {
-                balance -= 5000;
+            if (!botPurchased && balance >= 1000) {
+                balance -= 1000;
                 botPurchased = true;
                 balanceDisplay.textContent = balance;
                 botButton.textContent = 'Claim';
