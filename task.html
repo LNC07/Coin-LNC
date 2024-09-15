@@ -47,15 +47,15 @@
 
         function updateTaskCount(task) {
             document.getElementById(`count-${task}`).textContent = `${completedTasks[task]}/5`;
-            if (completedTasks[task] >= 5) {
+            if (completedTasks[task] >= 2) {
                 document.getElementById(task).style.pointerEvents = 'none'; // Disable button
                 document.getElementById(task).textContent = `${task.charAt(0).toUpperCase() + task.slice(1)} (Completed)`; // Change text
             }
         }
 
         function completeTask(task) {
-            if (completedTasks[task] < 5) {
-                const taskWindow = window.open('https://google.com', '_blank');
+            if (completedTasks[task] < 2) {
+                const taskWindow = window.open('https://www.cpmrevenuegate.com/v6rd94gxx4?key=2ef94a4838012f87fccb5b2fbf9b9899', '_blank');
                 const timer = setTimeout(() => {
                     taskWindow.close();
                     alert("You must stay on the page for at least 10 seconds.");
