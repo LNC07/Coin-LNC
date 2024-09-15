@@ -24,6 +24,9 @@
             cursor: pointer;
             margin: 10px;
         }
+        .button-count {
+            margin-left: 10px;
+        }
         .message {
             margin-bottom: 20px;
         }
@@ -31,15 +34,23 @@
 </head>
 <body>
     <div class="message">Complete task and earn 1000 coins!</div>
-    <div class="task-button" onclick="completeTask()">Task 1</div>
-    <div class="task-button" onclick="completeTask()">Task 2</div>
-    <div class="task-button" onclick="completeTask()">Task 3</div>
+    <div class="task-button" id="task1" onclick="completeTask('task1')">Task 1 <span class="button-count" id="count-task1">0/5</span></div>
+    <div class="task-button" id="task2" onclick="completeTask('task2')">Task 2 <span class="button-count" id="count-task2">0/5</span></div>
+    <div class="task-button" id="task3" onclick="completeTask('task3')">Task 3 <span class="button-count" id="count-task3">0/5</span></div>
 
     <script>
-        let completedTasks = 0;
+        let completedTasks = {
+            task1: parseInt(localStorage.getItem('completedTask1')) || 0,
+            task2: parseInt(localStorage.getItem('completedTask2')) || 0,
+            task3: parseInt(localStorage.getItem('completedTask3')) || 0,
+        };
 
-        function completeTask() {
-            if (completedTasks < 5) {
+        function updateTaskCount(task) {
+            document.getElementById(`count-${task}`).textContent = `${completedTasks[task]}/5`;
+        }
+
+        function completeTask(task) {
+            if (completedTasks[task] < 5) {
                 const taskWindow = window.open('https://google.com', '_blank');
                 const timer = setTimeout(() => {
                     taskWindow.close();
@@ -49,16 +60,27 @@
                 taskWindow.onload = function() {
                     setTimeout(() => {
                         clearTimeout(timer);
-                        completedTasks++;
+                        completedTasks[task]++;
+                        localStorage.setItem(`completedTask${task.slice(-1)}`, completedTasks[task]);
                         alert("Task completed! 1000 coins added to your balance.");
                         // Here you can add code to update the balance in localStorage
-                        // e.g., localStorage.setItem('balance', balance + 1000);
+                        let balance = parseInt(localStorage.getItem('balance')) || 0;
+                        balance += 1000;
+                        localStorage.setItem('balance', balance);
+                        // Update balance display (if needed)
+                        // e.g. balanceDisplay.textContent = balance;
+                        updateTaskCount(task);
                     }, 10000);
                 };
             } else {
-                alert("You can only complete 5 tasks every 12 hours.");
+                alert("You can only complete 5 tasks every 3 hours.");
             }
         }
+
+        // Initialize task counts on page load
+        updateTaskCount('task1');
+        updateTaskCount('task2');
+        updateTaskCount('task3');
     </script>
 </body>
 </html>
