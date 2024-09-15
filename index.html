@@ -69,7 +69,7 @@
         <div class="progress" id="progress">500/500</div>
     </div>
     <div class="menu">
-        <div>Ref</div>
+        <div id="refButton">Ref</div>
         <div>Task</div>
         <div>Top</div>
         <div id="botButton">BOT</div>
@@ -81,12 +81,14 @@
         const coin = document.getElementById('coin');
         const progressDisplay = document.getElementById('progress');
         const botButton = document.getElementById('botButton');
+        const refButton = document.getElementById('refButton');
 
         let balance = parseInt(localStorage.getItem('balance')) || 0;
         let progress = parseInt(localStorage.getItem('progress')) || 500;
         let botPurchased = localStorage.getItem('botPurchased') === 'true';
         let lastClaimTime = parseInt(localStorage.getItem('lastClaimTime')) || 0;
         const claimInterval = 18000000; // 5 hours in milliseconds
+        let referralCount = parseInt(localStorage.getItem('referralCount')) || 0; // Count of referrals
 
         balanceDisplay.textContent = balance;
         progressDisplay.textContent = `${progress}/500`;
@@ -100,6 +102,7 @@
             localStorage.setItem('progress', progress);
             localStorage.setItem('botPurchased', botPurchased);
             localStorage.setItem('lastClaimTime', lastClaimTime);
+            localStorage.setItem('referralCount', referralCount); // Update referral count
         }
 
         coin.addEventListener('click', () => {
@@ -139,6 +142,22 @@
             } else {
                 alert("You need 5000 coins to buy a bot!");
             }
+        });
+
+        // Refer button functionality
+        refButton.addEventListener('click', () => {
+            const userId = Math.floor(Math.random() * 100000); // Generate a random user ID
+            const referralLink = `https://yourwebsite.com?ref=${userId}`;
+            alert(`Your referral link: ${referralLink}`);
+            
+            // If someone uses this link, add 2000 coins to their balance
+            // For demonstration, we will simulate it here:
+            balance += 2000; // Add 2000 coins to balance
+            referralCount++; // Increment the referral count
+            localStorage.setItem('balance', balance); // Save updated balance
+            balanceDisplay.textContent = balance; // Update balance display
+            localStorage.setItem('referralCount', referralCount); // Save referral count
+            alert("2000 coins added to your balance for using the referral link!");
         });
 
         document.querySelector('.menu div:nth-child(2)').addEventListener('click', () => {
