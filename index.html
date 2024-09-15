@@ -148,17 +148,26 @@
         refButton.addEventListener('click', () => {
             const userId = Math.floor(Math.random() * 100000); // Generate a random user ID
             const referralLink = `https://yourwebsite.com?ref=${userId}`;
-            alert(`Your referral link: ${referralLink}`);
-            
-            // If someone uses this link, add 2000 coins to their balance
-            // For demonstration, we will simulate it here:
-            balance += 2000; // Add 2000 coins to balance
-            referralCount++; // Increment the referral count
-            localStorage.setItem('balance', balance); // Save updated balance
-            balanceDisplay.textContent = balance; // Update balance display
-            localStorage.setItem('referralCount', referralCount); // Save referral count
-            alert("2000 coins added to your balance for using the referral link!");
+            navigator.clipboard.writeText(referralLink); // Copy the referral link to clipboard
+            alert(`Your referral link has been copied: ${referralLink}`);
         });
+
+        // Check for referral when the user arrives
+        const urlParams = new URLSearchParams(window.location.search);
+        const referrerId = urlParams.get('ref');
+        if (referrerId) {
+            // Check if this referral is already counted
+            const isReferred = localStorage.getItem(`referred_${referrerId}`);
+            if (!isReferred) {
+                balance += 2000; // Add 2000 coins to balance
+                referralCount++; // Increment the referral count
+                localStorage.setItem('balance', balance); // Save updated balance
+                balanceDisplay.textContent = balance; // Update balance display
+                localStorage.setItem(`referred_${referrerId}`, true); // Mark this referral as counted
+                alert("2000 coins added to your balance for using the referral link!");
+                updateLocalStorage(); // Update local storage
+            }
+        }
 
         document.querySelector('.menu div:nth-child(2)').addEventListener('click', () => {
             window.open('task.html', '_blank');
