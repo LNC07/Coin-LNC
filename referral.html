@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referral Page</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .ref-link {
+            margin: 20px;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Your Referral Link</h2>
+    <div class="ref-link" id="referralLink"></div>
+    <div id="status">Complete 5 referrals and earn 50000 coins!</div>
+    <div id="referralCount">Referral Count: 0/5</div>
+    <button id="claimButton" style="display: none;">Claim 50000 Coins</button>
+
+    <script>
+        let referralCount = parseInt(localStorage.getItem('referralCount')) || 0;
+
+        const referralLink = document.getElementById('referralLink');
+        const status = document.getElementById('status');
+        const referralCountDisplay = document.getElementById('referralCount');
+        const claimButton = document.getElementById('claimButton');
+
+        // Generate a random referral link
+        const userId = Math.floor(Math.random() * 100000);
+        const link = `https://lnc07.github.io/Coin-LNC/?ref=${userId}`;
+        referralLink.textContent = link;
+
+        // Update local storage
+        localStorage.setItem(`referralLink_${userId}`, referralCount);
+
+        referralLink.addEventListener('click', () => {
+            referralCount++;
+            localStorage.setItem(`referralCount_${userId}`, referralCount);
+            updateReferralCountDisplay();
+
+            // Check if the user can claim coins
+            if (referralCount >= 5) {
+                claimButton.style.display = 'block';
+            }
+        });
+
+        function updateReferralCountDisplay() {
+            referralCountDisplay.textContent = `Referral Count: ${referralCount}/5`;
+        }
+
+        claimButton.addEventListener('click', () => {
+            let balance = parseInt(localStorage.getItem('balance')) || 0;
+            balance += 50000;
+            localStorage.setItem('balance', balance);
+            alert("You've claimed 50000 coins!");
+            claimButton.style.display = 'none';
+            referralCount = 0; // Reset count after claiming
+            updateReferralCountDisplay();
+        });
+
+        updateReferralCountDisplay();
+    </script>
+</body>
+</html>
