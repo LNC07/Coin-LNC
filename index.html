@@ -84,7 +84,8 @@
         const botButton = document.getElementById('botButton');
         const refButton = document.getElementById('refButton');
         const referralCountDisplay = document.getElementById('referralCount');
-        
+
+        // Initialize values from local storage
         let balance = parseInt(localStorage.getItem('balance')) || 0;
         let progress = parseInt(localStorage.getItem('progress')) || 500;
         let botPurchased = localStorage.getItem('botPurchased') === 'true';
@@ -162,11 +163,13 @@
             // Check if this referral is already counted
             const isReferred = localStorage.getItem(`referred_${referrerId}`);
             if (!isReferred) {
+                // Add 2000 coins to the referrer and increment their referral count
+                let referrerBalance = parseInt(localStorage.getItem('balance')) || 0;
+                referrerBalance += 2000; // Add 2000 coins to the referrer
+                localStorage.setItem('balance', referrerBalance); // Save updated balance
                 balance += 2000; // Add 2000 coins to the new user
-                const referrerBalance = parseInt(localStorage.getItem('balance')) || 0;
-                localStorage.setItem('balance', referrerBalance + 2000); // Add 2000 coins to the referrer
-                balanceDisplay.textContent = balance; // Update balance display
                 referralCount += 1; // Increment the referral count for the referrer
+                balanceDisplay.textContent = balance; // Update balance display
                 localStorage.setItem(`referred_${referrerId}`, true); // Mark this referral as counted
                 alert("2000 coins added to your balance for using the referral link!");
                 updateLocalStorage(); // Update local storage
