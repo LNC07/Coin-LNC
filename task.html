@@ -49,7 +49,7 @@
             document.getElementById(`count-${task}`).textContent = `${completedTasks[task]}/5`;
             if (completedTasks[task] >= 5) {
                 document.getElementById(task).style.pointerEvents = 'none'; // Disable button
-                document.getElementById(task).textContent = "Task 1 (Completed)"; // Change text
+                document.getElementById(task).textContent = `${task.charAt(0).toUpperCase() + task.slice(1)} (Completed)`; // Change text
             }
         }
 
