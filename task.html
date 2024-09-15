@@ -47,6 +47,10 @@
 
         function updateTaskCount(task) {
             document.getElementById(`count-${task}`).textContent = `${completedTasks[task]}/5`;
+            if (completedTasks[task] >= 5) {
+                document.getElementById(task).style.pointerEvents = 'none'; // Disable button
+                document.getElementById(task).textContent = "Task 1 (Completed)"; // Change text
+            }
         }
 
         function completeTask(task) {
@@ -62,13 +66,13 @@
                         clearTimeout(timer);
                         completedTasks[task]++;
                         localStorage.setItem(`completedTask${task.slice(-1)}`, completedTasks[task]);
-                        alert("Task completed! 1000 coins added to your balance.");
-                        // Here you can add code to update the balance in localStorage
+                        
+                        // Update balance
                         let balance = parseInt(localStorage.getItem('balance')) || 0;
-                        balance += 1000;
-                        localStorage.setItem('balance', balance);
-                        // Update balance display (if needed)
-                        // e.g. balanceDisplay.textContent = balance;
+                        balance += 1000; // Add 1000 coins
+                        localStorage.setItem('balance', balance); // Save updated balance
+
+                        alert("Task completed! 1000 coins added to your balance.");
                         updateTaskCount(task);
                     }, 10000);
                 };
