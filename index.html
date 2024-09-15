@@ -166,24 +166,20 @@
             if (!isReferred) {
                 // Get the referrer's current balance
                 let referrerBalance = parseInt(localStorage.getItem('balance')) || 0;
-                
+
                 // Add 2000 coins to the referrer
                 referrerBalance += 2000;
                 localStorage.setItem('balance', referrerBalance); // Save updated balance for the referrer
-                
-                // Add 2000 coins to the new user
-                balance += 2000;
-                
+
                 // Increment the referral count for the referrer
                 referralCount += 1; 
-                balanceDisplay.textContent = balance; // Update the new user's balance display
-                
+                referralCountDisplay.textContent = referralCount; // Update referral count display
+
                 // Mark this referral as counted
                 localStorage.setItem(referrerKey, true); 
                 
-                alert("2000 coins added to your balance for using the referral link!");
+                alert("2000 coins added to the referrer for using the referral link!");
                 updateLocalStorage(); // Update local storage
-                referralCountDisplay.textContent = referralCount; // Update referral count display
             }
         }
 
