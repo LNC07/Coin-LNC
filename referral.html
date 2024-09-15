@@ -47,9 +47,6 @@
         const link = `https://lnc07.github.io/Coin-LNC/?ref=${userId}`;
         referralLink.textContent = link;
 
-        // Update local storage
-        localStorage.setItem(`referralLink_${userId}`, referralCount);
-
         referralLink.addEventListener('click', () => {
             referralCount++;
             localStorage.setItem(`referralCount_${userId}`, referralCount);
