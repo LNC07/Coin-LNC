@@ -62,21 +62,20 @@
                 }, 10000);
 
                 setTimeout(() => {
-                    clearTimeout(timer);
-                    taskWindow.close(); // Close the task window after 10 seconds
                     completedTasks[task]++;
+                    localStorage.setItem(`completedTask${task.slice(-1)}`, completedTasks[task]);
                     
                     // Update balance
                     let balance = parseInt(localStorage.getItem('balance')) || 0;
                     balance += 1000; // Add 1000 coins
                     localStorage.setItem('balance', balance); // Save updated balance
 
-                    // Update local storage for completed tasks
-                    localStorage.setItem(`completedTask${task.slice(-1)}`, completedTasks[task]);
-                    
                     alert("Task completed! 1000 coins added to your balance.");
                     updateTaskCount(task);
                     updateBalanceDisplay(); // Update balance display
+
+                    clearTimeout(timer); // Close the timer
+                    taskWindow.close(); // Close the task window
                 }, 10000);
             } else {
                 alert("You can only complete 5 tasks every 3 hours.");
@@ -88,7 +87,7 @@
             document.getElementById('balance').textContent = balance; // Update balance display
         }
 
-        // Initialize task counts and balance on page load
+        // Initialize task counts on page load
         updateTaskCount('task1');
         updateTaskCount('task2');
         updateTaskCount('task3');
