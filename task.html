@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Page</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .task-button {
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .message {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="message">Complete task and earn 1000 coins!</div>
+    <div class="task-button" onclick="completeTask()">Task 1</div>
+    <div class="task-button" onclick="completeTask()">Task 2</div>
+    <div class="task-button" onclick="completeTask()">Task 3</div>
+
+    <script>
+        let completedTasks = 0;
+
+        function completeTask() {
+            if (completedTasks < 5) {
+                const taskWindow = window.open('https://google.com', '_blank');
+                const timer = setTimeout(() => {
+                    taskWindow.close();
+                    alert("You must stay on the page for at least 10 seconds.");
+                }, 10000);
+
+                taskWindow.onload = function() {
+                    setTimeout(() => {
+                        clearTimeout(timer);
+                        completedTasks++;
+                        alert("Task completed! 1000 coins added to your balance.");
+                        // Here you can add code to update the balance in localStorage
+                        // e.g., localStorage.setItem('balance', balance + 1000);
+                    }, 10000);
+                };
+            } else {
+                alert("You can only complete 5 tasks every 12 hours.");
+            }
+        }
+    </script>
+</body>
+</html>
