@@ -70,11 +70,12 @@
     </div>
     <div class="menu">
         <div id="refButton">Ref</div>
-        <div>Task</div>
+        <div id="taskButton">Task</div>
         <div>Top</div>
         <div id="botButton">BOT</div>
         <div>Airdrop</div>
     </div>
+    <div id="referralCountDisplay" style="margin-top: 20px;">Referral Count: <span id="referralCount">0</span></div>
 
     <script>
         const balanceDisplay = document.getElementById('balance');
@@ -82,6 +83,8 @@
         const progressDisplay = document.getElementById('progress');
         const botButton = document.getElementById('botButton');
         const refButton = document.getElementById('refButton');
+        const taskButton = document.getElementById('taskButton');
+        const referralCountDisplay = document.getElementById('referralCount');
 
         // Initialize values from local storage
         let balance = parseInt(localStorage.getItem('balance')) || 0;
@@ -89,9 +92,11 @@
         let botPurchased = localStorage.getItem('botPurchased') === 'true';
         let lastClaimTime = parseInt(localStorage.getItem('lastClaimTime')) || 0;
         const claimInterval = 18000000; // 5 hours in milliseconds
+        let referralCount = parseInt(localStorage.getItem('referralCount')) || 0; // Count of referrals
 
         balanceDisplay.textContent = balance;
         progressDisplay.textContent = `${progress}/500`;
+        referralCountDisplay.textContent = referralCount; // Initialize referral count display
 
         if (botPurchased) {
             botButton.textContent = 'Claim';
@@ -102,6 +107,7 @@
             localStorage.setItem('progress', progress);
             localStorage.setItem('botPurchased', botPurchased);
             localStorage.setItem('lastClaimTime', lastClaimTime);
+            localStorage.setItem('referralCount', referralCount); // Update referral count
         }
 
         coin.addEventListener('click', () => {
@@ -148,8 +154,14 @@
             window.open('referral.html', '_blank');
         });
 
-        document.querySelector('.menu div:nth-child(2)').addEventListener('click', () => {
-            window.open('task.html', '_blank');
+        // Task button functionality
+        taskButton.addEventListener('click', () => {
+            // Add coins for completing a task
+            const coinsEarned = 100; // Example: 100 coins for completing a task
+            balance += coinsEarned;
+            balanceDisplay.textContent = balance;
+            updateLocalStorage();
+            alert(`You completed a task and earned ${coinsEarned} coins!`);
         });
 
         document.querySelector('.menu div:nth-child(5)').addEventListener('click', () => {
