@@ -74,6 +74,7 @@
 
                         alert("Task completed! 1000 coins added to your balance.");
                         updateTaskCount(task);
+                        updateBalanceDisplay(); // Update balance display
                     }, 10000);
                 };
             } else {
@@ -81,10 +82,16 @@
             }
         }
 
+        function updateBalanceDisplay() {
+            let balance = parseInt(localStorage.getItem('balance')) || 0;
+            alert(`Your current balance is: ${balance}`);
+        }
+
         // Initialize task counts on page load
         updateTaskCount('task1');
         updateTaskCount('task2');
         updateTaskCount('task3');
+        updateBalanceDisplay(); // Display initial balance
     </script>
 </body>
 </html>
