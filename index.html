@@ -22,6 +22,10 @@
             font-size: 28px;
             margin-top: 24px;
         }
+        .rank {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
         .coin {
             margin: 40px auto;
             width: 300px;
@@ -31,6 +35,18 @@
         }
         .coin:active {
             transform: scale(0.95);
+        }
+        .progress-bar {
+            background-color: #444;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px;
+            width: 80%;
+        }
+        .progress {
+            background-color: #4CAF50;
+            padding: 10px;
+            text-align: center;
         }
         .menu {
             display: flex;
@@ -49,37 +65,195 @@
 <body>
     <div class="currency">💰 <span id="balance">0</span></div>
     <img src="coin.png" alt="Coin" class="coin" id="coin">
+    <div class="progress-bar">
+        <div class="progress" id="progress">500/500</div>
+    </div>
     <div class="menu">
         <div id="refButton">Ref</div>
+        <div>Task</div>
+        <div>Top</div>
         <div id="botButton">BOT</div>
+        <div>Airdrop</div>
     </div>
+    <div id="referralCountDisplay" style="margin-top: 20px;">Referral Count: <span id="referralCount">0</span></div>
 
     <script>
         const balanceDisplay = document.getElementById('balance');
         const coin = document.getElementById('coin');
+        const progressDisplay = document.getElementById('progress');
+        const botButton = document.getElementById('botButton');
         const refButton = document.getElementById('refButton');
+        const referralCountDisplay = document.getElementById('referralCount');
+
+        // Initialize values from local storage
         let balance = parseInt(localStorage.getItem('balance')) || 0;
+        let progress = parseInt(localStorage.getItem('progress')) || 500;
+        let botPurchased = localStorage.getItem('botPurchased') === 'true';
+        let lastClaimTime = parseInt(localStorage.getItem('lastClaimTime')) || 0;
+        const claimInterval = 18000000; // 5 hours in milliseconds
+        let referralCount = parseInt(localStorage.getItem('referralCount')) || 0; // Count of referrals
 
         balanceDisplay.textContent = balance;
+        progressDisplay.textContent = `${progress}/500`;
+        referralCountDisplay.textContent = referralCount; // Initialize referral count display
+
+        if (botPurchased) {
+            botButton.textContent = 'Claim';
+        }
 
         function updateLocalStorage() {
             localStorage.setItem('balance', balance);
+            localStorage.setItem('progress', progress);
+            localStorage.setItem('botPurchased', botPurchased);
+            localStorage.setItem('lastClaimTime', lastClaimTime);
+            localStorage.setItem('referralCount', referralCount); // Update referral count
         }
 
         coin.addEventListener('click', () => {
-            balance += 1;
-            balanceDisplay.textContent = balance;
-            updateLocalStorage();
+            if (progress > 0) {
+                coin.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    coin.style.transform = 'scale(1)';
+                }, 100);
+
+                balance += 1;
+                progress -= 1;
+                balanceDisplay.textContent = balance;
+                progressDisplay.textContent = `${progress}/500`;
+                updateLocalStorage();
+            }
         });
 
         botButton.addEventListener('click', () => {
-            // BOT functionality can be added here
+            if (!botPurchased && balance >= 5000) {
+                balance -= 5000;
+                botPurchased = true;
+                balanceDisplay.textContent = balance;
+                botButton.textContent = 'Claim';
+                updateLocalStorage();
+            } else if (botPurchased) {
+                const currentTime = Date.now();
+                if (currentTime - lastClaimTime >= claimInterval) {
+                    lastClaimTime = currentTime;
+                    balance += 1000; // Add 1000 coins to balance
+                    balanceDisplay.textContent = balance;
+                    updateLocalStorage();
+                    alert("Claim successful! 1000 coins added to your balance.");
+                } else {
+                    const timeRemaining = claimInterval - (currentTime - lastClaimTime);
+                    alert(`You can claim again in ${Math.ceil(timeRemaining / 60000)} minutes.`);
+                }
+            } else {
+                alert("You need 5000 coins to buy a bot!");
+            }
         });
 
         // Open referral page on click
         refButton.addEventListener('click', () => {
             window.open('referral.html', '_blank');
         });
+
+        document.querySelector('.menu div:nth-child(2)').addEventListener('click', () => {
+            window.open('task.html', '_blank');
+        });
+
+        document.querySelector('.menu div:nth-child(5)').addEventListener('click', () => {
+            window.open('airdrop.html', '_blank');
+        });
+
+        function regenerateProgress() {
+            if (progress < 500) {
+                progress += 3;
+                if (progress > 500) progress = 500;
+                progressDisplay.textContent = `${progress}/500`;
+                updateLocalStorage();
+            }
+        }
+
+        setInterval(regenerateProgress, 1000);
+    </script>
+</body>
+</html>
+```
+
+### Referral Page Code (referral.html)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referral Page</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .ref-link {
+            margin: 20px;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Your Referral Link</h2>
+    <div class="ref-link" id="referralLink"></div>
+    <div id="status">Complete 5 referrals and earn 50000 coins!</div>
+    <div id="referralCount">Referral Count: 0/5</div>
+    <button id="claimButton" style="display: none;">Claim 50000 Coins</button>
+
+    <script>
+        let referralCount = parseInt(localStorage.getItem('referralCount')) || 0;
+
+        const referralLink = document.getElementById('referralLink');
+        const status = document.getElementById('status');
+        const referralCountDisplay = document.getElementById('referralCount');
+        const claimButton = document.getElementById('claimButton');
+
+        // Generate a random referral link
+        const userId = Math.floor(Math.random() * 100000);
+        const link = `https://lnc07.github.io/Coin-LNC/?ref=${userId}`;
+        referralLink.textContent = link;
+
+        referralLink.addEventListener('click', () => {
+            referralCount++;
+            localStorage.setItem(`referralCount_${userId}`, referralCount);
+            updateReferralCountDisplay();
+
+            // Check if the user can claim coins
+            if (referralCount >= 5) {
+                claimButton.style.display = 'block';
+            }
+        });
+
+        function updateReferralCountDisplay() {
+            referralCountDisplay.textContent = `Referral Count: ${referralCount}/5`;
+        }
+
+        claimButton.addEventListener('click', () => {
+            let balance = parseInt(localStorage.getItem('balance')) || 0;
+            balance += 50000;
+            localStorage.setItem('balance', balance);
+            alert("You've claimed 50000 coins!");
+            claimButton.style.display = 'none';
+            referralCount = 0; // Reset count after claiming
+            updateReferralCountDisplay();
+        });
+
+        updateReferralCountDisplay();
     </script>
 </body>
 </html>
