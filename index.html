@@ -161,16 +161,26 @@
         const referrerId = urlParams.get('ref');
         if (referrerId) {
             // Check if this referral is already counted
-            const isReferred = localStorage.getItem(`referred_${referrerId}`);
+            const referrerKey = `referred_${referrerId}`;
+            const isReferred = localStorage.getItem(referrerKey);
             if (!isReferred) {
-                // Add 2000 coins to the referrer and increment their referral count
+                // Get the referrer's current balance
                 let referrerBalance = parseInt(localStorage.getItem('balance')) || 0;
-                referrerBalance += 2000; // Add 2000 coins to the referrer
-                localStorage.setItem('balance', referrerBalance); // Save updated balance
-                balance += 2000; // Add 2000 coins to the new user
-                referralCount += 1; // Increment the referral count for the referrer
-                balanceDisplay.textContent = balance; // Update balance display
-                localStorage.setItem(`referred_${referrerId}`, true); // Mark this referral as counted
+                
+                // Add 2000 coins to the referrer
+                referrerBalance += 2000;
+                localStorage.setItem('balance', referrerBalance); // Save updated balance for the referrer
+                
+                // Add 2000 coins to the new user
+                balance += 2000;
+                
+                // Increment the referral count for the referrer
+                referralCount += 1; 
+                balanceDisplay.textContent = balance; // Update the new user's balance display
+                
+                // Mark this referral as counted
+                localStorage.setItem(referrerKey, true); 
+                
                 alert("2000 coins added to your balance for using the referral link!");
                 updateLocalStorage(); // Update local storage
                 referralCountDisplay.textContent = referralCount; // Update referral count display
