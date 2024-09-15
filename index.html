@@ -75,6 +75,7 @@
         <div id="botButton">BOT</div>
         <div>Airdrop</div>
     </div>
+    <div id="referralCountDisplay" style="margin-top: 20px;">Referral Count: <span id="referralCount">0</span></div>
 
     <script>
         const balanceDisplay = document.getElementById('balance');
@@ -82,7 +83,8 @@
         const progressDisplay = document.getElementById('progress');
         const botButton = document.getElementById('botButton');
         const refButton = document.getElementById('refButton');
-
+        const referralCountDisplay = document.getElementById('referralCount');
+        
         let balance = parseInt(localStorage.getItem('balance')) || 0;
         let progress = parseInt(localStorage.getItem('progress')) || 500;
         let botPurchased = localStorage.getItem('botPurchased') === 'true';
@@ -92,6 +94,7 @@
 
         balanceDisplay.textContent = balance;
         progressDisplay.textContent = `${progress}/500`;
+        referralCountDisplay.textContent = referralCount; // Initialize referral count display
 
         if (botPurchased) {
             botButton.textContent = 'Claim';
@@ -159,13 +162,15 @@
             // Check if this referral is already counted
             const isReferred = localStorage.getItem(`referred_${referrerId}`);
             if (!isReferred) {
-                balance += 2000; // Add 2000 coins to balance
-                referralCount++; // Increment the referral count
-                localStorage.setItem('balance', balance); // Save updated balance
+                balance += 2000; // Add 2000 coins to the new user
+                const referrerBalance = parseInt(localStorage.getItem('balance')) || 0;
+                localStorage.setItem('balance', referrerBalance + 2000); // Add 2000 coins to the referrer
                 balanceDisplay.textContent = balance; // Update balance display
+                referralCount += 1; // Increment the referral count for the referrer
                 localStorage.setItem(`referred_${referrerId}`, true); // Mark this referral as counted
                 alert("2000 coins added to your balance for using the referral link!");
                 updateLocalStorage(); // Update local storage
+                referralCountDisplay.textContent = referralCount; // Update referral count display
             }
         }
 
